@@ -5,6 +5,8 @@ import ujson
 
 from unittest.mock import patch
 
+import pytest
+
 logger = logging.getLogger(__name__)
 
 
@@ -12,7 +14,6 @@ logger = logging.getLogger(__name__)
 def test_ckip_tokenizer(mock_WS_class):
     component_config = {"model_path": "./data"}
 
-    # def test_tokenizer(self, mock_WS_class):
     from rukip.tokenizer import CKIPTokenizer
     ckip_tokenizer = CKIPTokenizer(component_config)
     expected_token_list = [
@@ -27,3 +28,9 @@ def test_ckip_tokenizer(mock_WS_class):
             '元']
     assert [t.offset for t in tokens] == \
            [0, 2, 4, 5, 6, 8, 10, 11, 12, 15]
+
+
+def test_ckip_tokenizer_wo_model():
+    from rukip.tokenizer import CKIPTokenizer
+    with pytest.raises(Exception):
+        ckip_tokenizer = CKIPTokenizer()
