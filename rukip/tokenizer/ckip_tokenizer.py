@@ -14,6 +14,8 @@ from rasa.nlu.config import RasaNLUModelConfig
 from rasa.nlu.tokenizers import Token, Tokenizer
 from rasa.nlu.training_data import Message, TrainingData
 
+from ckiptagger import WS
+
 from rasa.nlu.constants import (
     MESSAGE_RESPONSE_ATTRIBUTE,
     MESSAGE_INTENT_ATTRIBUTE,
@@ -32,28 +34,23 @@ if typing.TYPE_CHECKING:
 
 class CKIPTokenizer(Tokenizer, Component):
 
-    provides = [MESSAGE_TOKENS_NAMES[attribute]
-                for attribute in MESSAGE_ATTRIBUTES]
-
-    # provides = [
-    #     MESSAGE_VECTOR_FEATURE_NAMES[attribute]
-    #     for attribute in SPACY_FEATURIZABLE_ATTRIBUTES
-    # ] + [MESSAGE_NER_FEATURES_ATTRIBUTE]
+    provides = ["tokens"]
 
     language_list = ["zh"]
 
-    name = "tokenizer_ckip"
+    name = "ckiptagger_tokenizer"
 
-    # defaults = {
-    #     "ckip_pos_tag": True
-    # }
     defaults = {
-        "dictionary_path": None,
-        # Flag to check whether to split intents
-        "intent_tokenization_flag": False,
-        # Symbol on which intent should be split
-        "intent_split_symbol": "_",
-    }  # default don't load custom dictionary
+        "model_path": None,
+        "recommend_dict": None,
+        "coerce_dict": None
+    }
+
+    def __init__(self, component_config: Dict[Text, Any] = None) -> None:
+        super(CKIPTokenizer, self).__init__(component_config)
+        if not self.component_config.get("model_path"):
+            raise Exception("model_path must be configured")
+        self._ws = WS(self.component_config.get("model_path"))
 
     def train(self, training_data, config, **kwargs):
         # type: (TrainingData, RasaNLUModelConfig, **Any) -> None
@@ -67,5 +64,19 @@ class CKIPTokenizer(Tokenizer, Component):
         message.set("tokens", self.tokenize(message.text))
 
     def tokenize(self, text):
-        # type: (Text) -> List[Token]
-        return None
+        ckip_tokens = self._ws([text])
+
+        running_offset = 0
+        tokens = []
+        for word in ckip_tokens[0]:
+            try:
+                word_offset = text.index(word, running_offset)
+            except ValueError as e:
+                warnings.warn(
+                    "ValueError on word: {0} on text: {1}".format(word, text))
+                continue
+            word_len = len(word)
+            running_offset = word_offset + word_len
+            token = Token(word, word_offset)
+            tokens.append(token)
+        return tokens
