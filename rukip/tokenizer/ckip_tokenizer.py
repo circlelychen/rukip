@@ -52,6 +52,10 @@ class CKIPTokenizer(Tokenizer, Component):
             raise Exception("model_path must be configured")
         self._ws = WS(self.component_config.get("model_path"))
 
+    @classmethod
+    def required_packages(cls) -> List[Text]:
+        return ["ckiptagger"]
+
     def train(self, training_data, config, **kwargs):
         # type: (TrainingData, RasaNLUModelConfig, **Any) -> None
 
