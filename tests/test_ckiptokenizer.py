@@ -9,10 +9,17 @@ import pytest
 
 logger = logging.getLogger(__name__)
 
+TEST_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 
 @patch("rukip.tokenizer.ckip_tokenizer.WS")
 def test_ckip_tokenizer(mock_WS_class):
-    component_config = {"model_path": "./data"}
+    user_dict_path = os.path.join(TEST_ROOT, "assets", "userdict.txt")
+    component_config = {
+        "model_path": "./data",
+        "recommend_dict_path": user_dict_path,
+        "coerce_dict_path": user_dict_path
+    }
 
     from rukip.tokenizer import CKIPTokenizer
     ckip_tokenizer = CKIPTokenizer(component_config)
@@ -34,3 +41,12 @@ def test_ckip_tokenizer_wo_model():
     from rukip.tokenizer import CKIPTokenizer
     with pytest.raises(Exception):
         ckip_tokenizer = CKIPTokenizer()
+
+
+def test_ckip_tokenizer_load_userdict():
+    user_dict_path = os.path.join(TEST_ROOT, "assets", "userdict.txt")
+    from rukip.tokenizer import CKIPTokenizer
+    word_to_weigth = CKIPTokenizer.load_userdict(user_dict_path)
+    assert word_to_weigth == {'土地公': '1', '土地婆:': '1',
+                              '公有:': '2', '來亂的:': '1',
+                              '緯來體育台:': '1'}

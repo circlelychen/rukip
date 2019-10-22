@@ -14,7 +14,7 @@ from rasa.nlu.config import RasaNLUModelConfig
 from rasa.nlu.tokenizers import Token, Tokenizer
 from rasa.nlu.training_data import Message, TrainingData
 
-from ckiptagger import WS
+from ckiptagger import construct_dictionary,  WS
 
 from rasa.nlu.constants import (
     MESSAGE_RESPONSE_ATTRIBUTE,
@@ -42,19 +42,59 @@ class CKIPTokenizer(Tokenizer, Component):
 
     defaults = {
         "model_path": None,
-        "recommend_dict": None,
-        "coerce_dict": None
+        "recommend_dict_path": {},
+        "coerce_dict_path": {}
     }
 
     def __init__(self, component_config: Dict[Text, Any] = None) -> None:
         super(CKIPTokenizer, self).__init__(component_config)
+
+        # must configure 'model_apth', or raise exception
         if not self.component_config.get("model_path"):
             raise Exception("model_path must be configured")
-        self._ws = WS(self.component_config.get("model_path"))
+
+        # construct recommend_dict if 'recommend_dict' is  configured
+        self._recommend_dict = {}
+        if self.component_config.get("recommend_dict_path", None):
+            self._recommend_dict = construct_dictionary(
+                self.load_userdict(
+                    self.component_config.get("recommend_dict_path")))
+
+        # construct coerce_dict if 'coerce_dict' is  configured
+        self._coerce_dict = {}
+        if self.component_config.get("coerce_dict_path", None):
+            self._coerce_dict = construct_dictionary(
+                self.load_userdict(
+                    self.component_config.get("coerce_dict_path")))
+
+        self._ws = WS(
+            self.component_config.get("model_path"),
+            recommend_dictionary=self._recommend_dict,
+            coerce_dictionary=self._coerce_dict
+        )
 
     @classmethod
     def required_packages(cls) -> List[Text]:
         return ["ckiptagger"]
+
+    @staticmethod
+    def load_userdict(path: Text) -> Dict:
+        word_to_weigth = {}
+        with open(path, "rb") as fin:
+            for lineno, ln in enumerate(fin, 1):
+                line = ln.strip()
+                if not isinstance(line, Text):
+                    try:
+                        line = line.decode('utf-8').lstrip('\ufeff')
+                    except UnicodeDecodeError:
+                        raise ValueError(
+                            'dictionary file %s must be utf-8' % path)
+                if not line:
+                    continue
+                line = line.strip()
+                word, freq = line.split(' ')[:2]
+                word_to_weigth[word] = freq
+        return word_to_weigth
 
     def train(self, training_data, config, **kwargs):
         # type: (TrainingData, RasaNLUModelConfig, **Any) -> None
