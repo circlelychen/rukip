@@ -16,7 +16,7 @@ setuptools.setup(
     packages=['rukip', 'rukip.tokenizer'],
     install_requires=[
         "rasa~=1.4.0",
-        "ckiptagger[tensorflow]~=0.0.19"
+        "ckiptagger[tf]~=0.0.19"
     ],
     extras_require={
         "test": ["pytest==5.2.1"]

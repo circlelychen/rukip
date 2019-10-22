@@ -68,9 +68,7 @@ class CKIPTokenizer(Tokenizer, Component):
                     self.component_config.get("coerce_dict_path")))
 
         self._ws = WS(
-            self.component_config.get("model_path"),
-            recommend_dictionary=self._recommend_dict,
-            coerce_dictionary=self._coerce_dict
+            self.component_config.get("model_path")
         )
 
     @classmethod
@@ -108,7 +106,10 @@ class CKIPTokenizer(Tokenizer, Component):
         message.set("tokens", self.tokenize(message.text))
 
     def tokenize(self, text):
-        ckip_tokens = self._ws([text])
+        ckip_tokens = self._ws(
+            [text],
+            recommend_dictionary=self._recommend_dict,
+            coerce_dictionary=self._coerce_dict)
 
         running_offset = 0
         tokens = []
