@@ -47,6 +47,6 @@ def test_ckip_tokenizer_load_userdict():
     user_dict_path = os.path.join(TEST_ROOT, "assets", "userdict.txt")
     from rukip.tokenizer import CKIPTokenizer
     word_to_weigth = CKIPTokenizer.load_userdict(user_dict_path)
-    assert word_to_weigth == {'土地公': '1', '土地婆:': '1',
-                              '公有:': '2', '來亂的:': '1',
-                              '緯來體育台:': '1'}
+    assert word_to_weigth == {'土地公': '1', '土地婆': '1',
+                              '公有': '2', '來亂的': '1',
+                              '緯來體育台': '1'}
