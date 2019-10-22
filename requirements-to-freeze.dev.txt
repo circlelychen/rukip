@@ -1,0 +1,2 @@
+-r requirements-to-freeze.txt
+pytest==5.2.1
