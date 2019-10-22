@@ -1,7 +1,6 @@
 import os
 import unittest
 import logging
-import ujson
 
 from unittest.mock import patch
 
