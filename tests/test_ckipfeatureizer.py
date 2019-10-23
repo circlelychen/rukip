@@ -15,12 +15,6 @@ logger = logging.getLogger(__name__)
 
 @patch("rukip.featurizer.ckip_featurizer.POS")
 def test_ckip_featurizer(mock_POS_class):
-    component_config = {
-        "model_path": "./data",
-    }
-
-    from rukip.featurizer import CKIPFeaturizer
-    ckip_featurizer = CKIPFeaturizer(component_config)
     expected_pos_list = [
         ['Nd', 'Nd', 'VC', 'Di', 'Na', 'Na', 'VC', 'Di', 'Neu', 'Nf']
     ]
@@ -41,6 +35,33 @@ def test_ckip_featurizer(mock_POS_class):
         Token("120", 12),
         Token("元", 15)
     ])
+
+    from rukip.featurizer import CKIPFeaturizer
+    component_config = {
+        "model_path": "./data"
+    }
+
+    ckip_featurizer = CKIPFeaturizer(component_config)
+    ner_features = ckip_featurizer.gen_ner_features(msg)
+    assert ner_features == [['昨天', 'Nd'], ['晚上', 'Nd'], ['吃', 'VC'],
+                            ['了', 'Di'], ['牛肉', 'Na'], ['燴飯', 'Na'],
+                            ['花', 'VC'], ['了', 'Di'], ['120', 'Neu'],
+                            ['元', 'Nf']]
+
+    component_config = {
+        "model_path": "./data",
+        "token_features": ["pos"]
+    }
+    ckip_featurizer = CKIPFeaturizer(component_config)
     ner_features = ckip_featurizer.gen_ner_features(msg)
     assert ner_features == [['Nd'], ['Nd'], ['VC'], ['Di'], ['Na'],
                             ['Na'], ['VC'], ['Di'], ['Neu'], ['Nf']]
+
+    component_config = {
+        "model_path": "./data",
+        "token_features": ["word"]
+    }
+    ckip_featurizer = CKIPFeaturizer(component_config)
+    ner_features = ckip_featurizer.gen_ner_features(msg)
+    assert ner_features == [['昨天'], ['晚上'], ['吃'], ['了'], ['牛肉'],
+                            ['燴飯'], ['花'], ['了'], ['120'], ['元']]

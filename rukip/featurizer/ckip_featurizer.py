@@ -22,7 +22,8 @@ class CKIPFeaturizer(Featurizer):
     provides = ["ner_features"]
 
     defaults = {
-        "model_path": None
+        "model_path": None,
+        "token_features": ["word", "pos"],
     }
 
     def __init__(self, component_config: Dict[Text, Any] = None) -> None:
@@ -55,5 +56,9 @@ class CKIPFeaturizer(Featurizer):
     def gen_ner_features(self, message: Message):
         tokens = message.get("tokens")
         word_list = [token.text for token in tokens]
+        if set(["word"]) == set(self.component_config["token_features"]):
+            return [[word] for word in word_list]
         pos_list = self._pos([word_list])
-        return [[pos] for pos in pos_list[0]]
+        if set(["pos"]) == set(self.component_config["token_features"]):
+            return [[pos] for pos in pos_list[0]]
+        return [[word, pos] for pos, word in zip(pos_list[0], word_list)]
