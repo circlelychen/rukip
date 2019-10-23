@@ -20,9 +20,6 @@ setuptools.setup(
         "rasa~=1.4.0",
         "ckiptagger[tf]~=0.0.19"
     ],
-    extras_require={
-        "test": ["pytest==5.2.1"]
-    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
