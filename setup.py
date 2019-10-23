@@ -13,7 +13,9 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/circlelychen/rukip",
     python_requires=">=3.6",
-    packages=['rukip', 'rukip.tokenizer'],
+    packages=['rukip',
+              'rukip.tokenizer',
+              'rukip.featurizer'],
     install_requires=[
         "rasa~=1.4.0",
         "ckiptagger[tf]~=0.0.19"
