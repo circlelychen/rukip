@@ -1,0 +1,14 @@
+language: "zh"
+pipeline:
+  - name: "rukip.tokenizer.CKIPTokenizer"
+    model_path: "./data"
+  - name: "rukip.featurizer.CKIPFeaturizer"
+    model_path: "./data"
+    token_features: ["word", "pos"]
+  - name: "CRFEntityExtractor"
+    features: [["ner_features"], ["ner_features"], ["ner_features"]]
+  - name: "CountVectorsFeaturizer"
+  - name: "EmbeddingIntentClassifier"
+
+policies:
+  - name: FallbackPolicy
