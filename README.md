@@ -4,14 +4,18 @@ An Embedded CKIP Rasa NLU Components
 ## Introduction
 This open-source library implements [Rasa](https://github.com/RasaHQ/rasa) custom components. 
 
-It offers```tokenizer``` powered by [ckiptagger](https://github.com/ckiplab/ckiptagger) as condadate in RasaNLU pipeline.
+It offers```tokenizer``` and ```featurizer``` powered by [ckiptagger](https://github.com/ckiplab/ckiptagger) as components in RasaNLU pipeline.
 
 ## Installation
-This library is built on [python >= 3.6](https://www.python.org/downloads/release/python-367/)
-
 ```bash
 pip install rukip
 ```
+rukip is a python library hosted on PyPI. Requirements:
+
+* python >= 3.6
+* rasa >= 1.4.0
+* ckiptagger[tf] >= 0.0.19
+
 ## Usage
 
 ### Download model files
@@ -30,23 +34,27 @@ Add ```CKIPTokenizer``` component into rasa nlu pipeline and configure model_pat
 
 The following is the example ***Rasa NLU config file*** 
 
-```xml
-language: "zh"
-pipeline:
-  - name: "rukip.tokenizer.CTBCTokenizer"
-    model_path: "./data"
-    recommend_dict_path: ""
-    cooerce_dict_path: ""
-  - name: "CountVectorsFeaturizer"
-  - name: "EmbeddingIntentClassifier"
+```yaml
+ language: "zh"
+ pipeline:
+   - name: "rukip.tokenizer.CKIPTokenizer"
+     model_path: "./data"
+   - name: "rukip.featurizer.CKIPFeaturizer"
+     model_path: "./data"
+     token_features: ["word", "pos"]
+   - name: "CRFEntityExtractor"
+     features: [["ner_features"], ["ner_features"], ["ner_features"]]
+   - name: "CountVectorsFeaturizer"
+   - name: "EmbeddingIntentClassifier"
+
 ```
 
 ### Components
 #### CKIPTokenizer
 This component has **one** required field (model_path) to be configured and offers **two** optional fields for user to assign dictionaries.
 
-* ```recommend_dict_path ``` is the file containing list of user-defined recommended-word
-* ```cooerce_dict_path``` is the file containing a list of must-word. 
+* ```recommend_dict_path ``` is the file containing list of user-defined recommended-word. Default is ```None```
+* ```cooerce_dict_path``` is the file containing a list of must-word. Default is ```None```
 
 The following is the example of user-defined dictionary. Each line shows one pair of word and weight.
 
@@ -58,6 +66,11 @@ The following is the example of user-defined dictionary. Each line shows one pai
 緯來體育台 1
 
 ``` 
+
+#### CKIPFeaturizer
+This component has **one** required field (model_path) to be configured and offers another optional fields for user to assign.
+
+* ```token_features ``` is list of features extracted from ckiptagger to generate ```ner_features```. Default is ```["word", "pos"]```
 
 ## Development
 ```bash

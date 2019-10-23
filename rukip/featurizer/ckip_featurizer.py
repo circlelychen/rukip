@@ -29,7 +29,7 @@ class CKIPFeaturizer(Featurizer):
     def __init__(self, component_config: Dict[Text, Any] = None) -> None:
         super(CKIPFeaturizer, self).__init__(component_config)
 
-        # must configure 'model_apth', or raise exception
+        # must configure 'model_path', or raise exception
         if not self.component_config.get("model_path"):
             raise Exception("model_path must be configured")
 
