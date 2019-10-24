@@ -1,2 +1,2 @@
-rasa==1.4.0
-ckiptagger[tf,gdown]==0.0.19
+rasa>=1.4.0
+ckiptagger[tf,gdown]>=0.0.19

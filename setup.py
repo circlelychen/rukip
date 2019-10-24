@@ -17,8 +17,8 @@ setuptools.setup(
               'rukip.tokenizer',
               'rukip.featurizer'],
     install_requires=[
-        "rasa~=1.4.0",
-        "ckiptagger[tf]~=0.0.19"
+        "rasa>=1.4.0",
+        "ckiptagger[tf]>=0.0.19"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
