@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rukip",
-    version="0.0.3",
+    version="0.0.4",
     author="Hao-Yuan Chen",
     author_email="truecirclely@gmail.com",
     description="An Embedded CKIP Rasa NLU Components",
