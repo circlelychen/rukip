@@ -14,7 +14,7 @@ build:
 	python setup.py sdist bdist_wheel
 
 publish:
-	twine upload dist/*
+	python3 -m twine upload dist/*
 
 clean:
 	find . -name __pycache__ -type d | xargs rm -rf
