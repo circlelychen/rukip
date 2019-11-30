@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rukip",
-    version="0.0.4",
+    version="0.0.5",
     author="Hao-Yuan Chen",
     author_email="truecirclely@gmail.com",
     description="An Embedded CKIP Rasa NLU Components",
@@ -17,8 +17,8 @@ setuptools.setup(
               'rukip.tokenizer',
               'rukip.featurizer'],
     install_requires=[
-        "rasa~=1.4.0",
-        "ckiptagger[tf]~=0.0.19"
+        "rasa>=1.4.0",
+        "ckiptagger[tf]>=0.0.19"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
