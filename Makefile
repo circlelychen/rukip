@@ -1,4 +1,4 @@
-.PHONY: clean test coverage
+.PHONY: clean test publish build
 
 help:
 	@echo "    build"
