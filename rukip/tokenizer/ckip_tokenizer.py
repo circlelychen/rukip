@@ -11,20 +11,10 @@ from typing import Any, Dict, List, Optional, Text
 
 from rasa.nlu.components import Component
 from rasa.nlu.config import RasaNLUModelConfig
-from rasa.nlu.tokenizers import Token, Tokenizer
+from rasa.nlu.tokenizers.tokenizer import Token, Tokenizer
 from rasa.nlu.training_data import Message, TrainingData
 
 from ckiptagger import construct_dictionary,  WS
-
-from rasa.nlu.constants import (
-    MESSAGE_RESPONSE_ATTRIBUTE,
-    MESSAGE_INTENT_ATTRIBUTE,
-    MESSAGE_TEXT_ATTRIBUTE,
-    MESSAGE_TOKENS_NAMES,
-    MESSAGE_ATTRIBUTES,
-    MESSAGE_SPACY_FEATURES_NAMES,
-    MESSAGE_VECTOR_FEATURE_NAMES,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +31,7 @@ class CKIPTokenizer(Tokenizer, Component):
     name = "ckiptagger_tokenizer"
 
     defaults = {
+        "use_cls_token": False,
         "model_path": None,
         "recommend_dict_path": {},
         "coerce_dict_path": {}

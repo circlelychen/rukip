@@ -17,8 +17,14 @@ publish:
 	python3 -m twine upload dist/*
 
 clean:
-	find . -name __pycache__ -type d | xargs rm -rf
+	find . -name '*.pyc' -exec rm -f {} +
+	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*~' -exec rm -f  {} +
+	find . -name '__pycache__' -type d -exec rm -rf  {} +
+	find . -name '.pytest_cache' -type d -exec rm -rf  {} +
+	rm -rf build/
+	rm -rf dist/
 
 test:
-	PYTHONPATH=. pytest tests/
+	pytest rukip
 
