@@ -1,0 +1,12 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: python:3.6-stretch
+    steps:
+      - checkout
+      - run:
+         name: install dependencies
+         command: |
+           pip install -r requirements-to-freeze.dev.txt
+           make test

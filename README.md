@@ -1,6 +1,8 @@
 # rukip
 An Embedded CKIP Rasa NLU Components
 
+[![CircleCI](https://circleci.com/gh/circlelychen/rukip/tree/master.svg?style=svg)](https://circleci.com/gh/circlelychen/rukip/tree/master)
+
 ## Introduction
 This open-source library implements [Rasa](https://github.com/RasaHQ/rasa) custom components. 
 

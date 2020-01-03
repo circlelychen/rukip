@@ -1,2 +1,4 @@
 -r requirements-to-freeze.txt
 pytest==5.2.1
+twine==3.1.1
+pytest-cov==2.8.1

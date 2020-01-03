@@ -26,5 +26,4 @@ clean:
 	rm -rf dist/
 
 test:
-	pytest rukip
-
+	pytest rukip --cov rukip
