@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout
       - run:
-         name: install dependencies
+         name: Install Dependencies and Run Tests
          command: |
            pip install -r requirements-to-freeze.dev.txt
            make test
