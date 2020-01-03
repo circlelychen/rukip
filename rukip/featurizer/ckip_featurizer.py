@@ -3,7 +3,7 @@ import typing
 from typing import Any, Dict, List, Optional, Text
 
 from rasa.nlu.config import RasaNLUModelConfig
-from rasa.nlu.featurizers import Featurizer
+from rasa.nlu.featurizers.featurizer import Featurizer
 from rasa.nlu.training_data import Message, TrainingData
 
 from ckiptagger import POS
@@ -22,6 +22,10 @@ class CKIPFeaturizer(Featurizer):
     provides = ["ner_features"]
 
     defaults = {
+        # if True return a sequence of features (return vector has size
+        # token-size x feature-dimension)
+        # if False token-size will be equal to 1
+        "return_sequence": False,
         "model_path": None,
         "token_features": ["word", "pos"],
     }
